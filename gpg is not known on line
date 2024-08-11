@@ -1,0 +1,10 @@
+sudo apt update is not working in ubuntu. I get this errors E: Type 'gpg' is not known on line 1 in source list /etc/apt/sources.list.d/yarn.list E: The list of sources could not be read. when I run sudo apt update command.
+
+I want solution for E: Type 'gpg' is not known on line 1 in source list /etc/apt/sources.list.d/yarn.list E: The list of sources could not be read for this error.
+
+
+
+You can try this command to fix your problem --
+------------------------------------------
+sudo rm /etc/apt/sources.list.d/yarn.list
+------------------------------------------
