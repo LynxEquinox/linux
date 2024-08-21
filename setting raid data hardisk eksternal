@@ -1,0 +1,34 @@
+Langkah-Langkah konfigurasi mirroring di Linux STB ARMBIAN :
+
+Alat dan Bahan :
+1. STB yang sudah di install armbian dan casaos
+2. 2 buah hdd 500gb 2.5inc
+3. 2 buah Converter sata to USB
+
+Langkah-langkah :
+1. Pasangkan konverter USB to Sata ke masing-masing HDD nya.
+2. Lalu colokan ke STB yang sudah berjalan.
+3. Masuk ke terminal STB
+4. Pada terminal STB ketikan perintah dibawah ini, untuk cek apakah si HDD sudah terbaca semua di sistem armbian dan pastikan tidak ada partisi alias HDD kosongan.
+lsblk
+5. Jika kedua buat hdd sudah terbaca semua dan ternyata ada partisi maka kita harus hapus partisi terlebih dahulu.
+6. Untuk melakukan delete partisi gunakan perintah dibawah
+fdisk /dev/sda
+7. setelah masuk ke menu fdisk tekan tombol "d" untuk menghapus partisi setelah itu tekan tombol "w" untuk save partisi
+8. pastikan lagi apakah HDD nya sekarang sudah tidaka ada partisinya. jika sudah kita lanjut ketahap selanjutnya
+9. install package mdadm dengan perintah berikut
+apt install mdadm -y
+10. Untuk membuat konfigurasi miroring masukan perintah dibawah ini, saya menggunakan raid 1 dengan disk sda dan sdb
+mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sda /dev/sdb
+mkfs.btrfs /dev/md1
+11. setelah selesai membuat raid kita tambahkan label agar partisinya bisa terbaca di casaos dengan perintah dibawah ini
+mkdir /mnt/raid1
+mount /dev/md1 /mnt/raid1
+12. setelah selesai kita bisa cek pada casaos, akan terdeteksi disk baru.
+13. agar setiap STB restart raid terbaca di casa os, kita perlu membuatnya secara otomatis dengan menggunakan cronjob seperti berikut :
+crontab -e
+@reboot mount /dev/md1 /mnt/raid1
+14. untuk konfigurasi raid di casa os sudah selesai
+
+
+divideo selanjutnya gw bakal bahas bagaimana cara file sharing di casa os, dengan menggunakan user dan password agar lebih aman.
